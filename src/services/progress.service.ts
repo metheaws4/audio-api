@@ -52,7 +52,9 @@ export class ProgressService {
         updatedAt: now,
         ...(completed && { finishedAt: now }),
       };
-      return this.storage.update(existing.id, updated);
+      const result = this.storage.update(existing.id, updated);
+      if (!result) throw new Error('Failed to update progress');
+      return result;
     } else {
       const newProgress = {
         userId,
@@ -84,7 +86,9 @@ export class ProgressService {
       finishedAt: new Date().toISOString(),
     };
 
-    return this.storage.update(existing.id, updated);
+    const result = this.storage.update(existing.id, updated);
+    if (!result) return null;
+    return result;
   }
 
   /**
@@ -104,7 +108,9 @@ export class ProgressService {
       finishedAt: null,
     };
 
-    return this.storage.update(existing.id, updated);
+    const result = this.storage.update(existing.id, updated);
+    if (!result) return null;
+    return result;
   }
 
   /**

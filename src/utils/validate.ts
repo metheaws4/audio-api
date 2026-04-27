@@ -54,7 +54,7 @@ export const validateContent = (req: Request, res: Response, next: NextFunction)
       res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: error.errors.map(err => ({
+        errors: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
@@ -63,7 +63,7 @@ export const validateContent = (req: Request, res: Response, next: NextFunction)
       res.status(400).json({
         success: false,
         message: 'Validation failed',
-        error: error instanceof Error ? error.message : 'Unknown validation error'
+        error: typeof error === "object" && error !== null && "message" in error ? error.message : 'Unknown validation error'
       });
     }
   }
@@ -81,7 +81,7 @@ export const validateProgress = (req: Request, res: Response, next: NextFunction
       res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: error.errors.map(err => ({
+        errors: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
@@ -90,7 +90,7 @@ export const validateProgress = (req: Request, res: Response, next: NextFunction
       res.status(400).json({
         success: false,
         message: 'Validation failed',
-        error: error instanceof Error ? error.message : 'Unknown validation error'
+        error: typeof error === "object" && error !== null && "message" in error ? error.message : 'Unknown validation error'
       });
     }
   }
@@ -108,7 +108,7 @@ export const validateUserId = (req: Request, res: Response, next: NextFunction) 
       res.status(400).json({
         success: false,
         message: 'Invalid user ID',
-        errors: error.errors.map(err => ({
+        errors: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
@@ -117,7 +117,7 @@ export const validateUserId = (req: Request, res: Response, next: NextFunction) 
       res.status(400).json({
         success: false,
         message: 'Invalid user ID',
-        error: error instanceof Error ? error.message : 'Unknown validation error'
+        error: typeof error === "object" && error !== null && "message" in error ? error.message : 'Unknown validation error'
       });
     }
   }
@@ -135,7 +135,7 @@ export const validateContentId = (req: Request, res: Response, next: NextFunctio
       res.status(400).json({
         success: false,
         message: 'Invalid content ID',
-        errors: error.errors.map(err => ({
+        errors: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
@@ -144,7 +144,7 @@ export const validateContentId = (req: Request, res: Response, next: NextFunctio
       res.status(400).json({
         success: false,
         message: 'Invalid content ID',
-        error: error instanceof Error ? error.message : 'Unknown validation error'
+        error: typeof error === "object" && error !== null && "message" in error ? error.message : 'Unknown validation error'
       });
     }
   }

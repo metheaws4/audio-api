@@ -6,6 +6,7 @@
 import { StorageService } from './storage.service';
 import { hashPassword, comparePassword } from '../utils/hash';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
+import { User } from '../models/AudioContent';
 
 export interface CreateUserDto {
   username: string;
@@ -16,15 +17,6 @@ export interface CreateUserDto {
 export interface LoginCredentialsDto {
   username: string;
   password: string;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  password: string;
-  email: string;
-  role: 'admin' | 'user';
-  createdAt: Date;
 }
 
 export interface AuthResult {
@@ -112,13 +104,16 @@ export class UserService {
     const hashedPassword = await hashPassword(userData.password);
 
     // Create user
+    const now = new Date().toISOString();
     const newUser: User = {
       id: Date.now().toString(),
       username: userData.username,
       password: hashedPassword,
       email: userData.email,
       role: 'user',
-      createdAt: new Date()
+      favorites: [],
+      createdAt: now,
+      updatedAt: now
     };
 
     return this.storage.create(newUser);
@@ -150,13 +145,16 @@ export class UserService {
     const hashedPassword = await hashPassword(userData.password);
 
     // Create admin user
+    const now = new Date().toISOString();
     const newUser: User = {
       id: Date.now().toString(),
       username: userData.username,
       password: hashedPassword,
       email: userData.email,
       role: 'admin',
-      createdAt: new Date()
+      favorites: [],
+      createdAt: now,
+      updatedAt: now
     };
 
     return this.storage.create(newUser);
@@ -235,6 +233,7 @@ export class UserService {
     };
   }
 
+
   /**
    * Update user profile
    */
@@ -253,8 +252,13 @@ export class UserService {
       createdAt: user.createdAt
     };
 
-    return this.storage.update(id, updateData);
+    const updated = this.storage.update(id, updateData);
+    if (!updated) {
+      throw new Error('Failed to update user');
+    }
+    return updated;
   }
+
 
   /**
    * Update user password
@@ -274,7 +278,9 @@ export class UserService {
     // Hash new password
     const hashedPassword = await hashPassword(newPassword);
 
-    return this.storage.update(id, { ...user, password: hashedPassword });
+    const updated = this.storage.update(id, { ...user, password: hashedPassword });
+    if (!updated) throw new Error("Update failed");
+    return updated;
   }
 
   /**

@@ -6,21 +6,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, JwtPayloadExtended } from '../utils/jwt';
 import { StorageService } from '../services/storage.service';
+import { User } from '../models/AudioContent';
 
 // Initialize storage service for users
 const userStorage = new StorageService<User>('users');
-
-/**
- * Interface for user object stored in JWT and request
- */
-export interface User {
-  id: string;
-  username: string;
-  password: string;
-  email: string;
-  role: 'admin' | 'user';
-  createdAt: Date;
-}
 
 /**
  * Extend Express Request to include user property

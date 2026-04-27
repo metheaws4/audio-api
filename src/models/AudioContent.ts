@@ -46,6 +46,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  role: 'admin' | 'user';
   favorites: string[]; // array of content IDs
   createdAt: string;
   updatedAt: string;
